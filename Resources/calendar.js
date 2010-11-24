@@ -1,4 +1,4 @@
-var win = Ti.UI.createWindow({backgroundImage:'pngs/Default-calinvite.png',layout:'vertical'});
+var win = Ti.UI.createWindow({backgroundImage:'pngs/Default-calinvite.png'});
 
 //-------------------toolbar-------------------
 
@@ -32,9 +32,11 @@ toolBarDays.add(toolBarDays.saturday);
 // blah blah blah - this is also important
 toolBar.add(toolBarTitle);
 toolBar.add(toolBarDays);
+//create a new empty day for custamization later - it will become first our current day
 var oldDay;
+//create day
 dayView = function(e){
-	var label = Ti.UI.createLabel({current:e.current,width:46,height:44,backgroundImage:'pngs/monthdaytile-Decoded.png',text:e.day,textAlign:'center',color:e.color,font:{fontSize:20,fontWeight:'bold'}});
+	var label = Ti.UI.createLabel({current:e.current,width:46,height:44,backgroundImage:'pngs/monthdaytile-Decoded.png',backgroundColor:'#DCDCDF',text:e.day,textAlign:'center',color:e.color,font:{fontSize:20,fontWeight:'bold'}});
 	if(e.day == e.dayOfMonth){
 		label.color='white';
 		label.backgroundImage='pngs/monthdaytiletoday_selected.png';
@@ -60,16 +62,13 @@ var calView = function(a,b,c){
 		case 11: monthTitle.text='December '+a; break;
 	};
 	//create main calendar view
-	var mainView = Ti.UI.createView({layout:'horizontal',backgroundColor:'#DCDCDF',width:322,height:'auto',left:-1,top:0});
+	var mainView = Ti.UI.createView({layout:'horizontal',width:322,height:'auto',top:44});
 	//set the time
 	var daysInMonth = 32 - new Date(a,b,32).getDate();
 	var dayOfMonth = new Date(a,b,c).getDate();
 	var dayOfWeek = new Date(a,b,1).getDay(); 
 	var daysInLastMonth = 32 - new Date(a,b-1,32).getDate();
 	var daysInNextMonth = (new Date(a,b,daysInMonth).getDay())-6;
-	//create day
-	//create a new empty day for custamization later - it will become first our current day
-//	var oldDay;
 	//set initial day number
 	var dayNumber = daysInLastMonth-dayOfWeek+1;
 	//get last month's days
@@ -83,9 +82,6 @@ var calView = function(a,b,c){
 	for(i=0;i<daysInMonth;i++){
 		var newDay=new dayView({day:dayNumber,color:'#3a4756',current:'yes',dayOfMonth:dayOfMonth});
 		mainView.add(newDay);
-		//the clicker function!!!! ha ha!
-	//	clicker(newDay,dayNumber);
-		
 		dayNumber++;
 	};
 	dayNumber = 1;
@@ -94,7 +90,6 @@ var calView = function(a,b,c){
 		mainView.add(new dayView({day:dayNumber,color:'#8e959f',current:'no',dayOfMonth:''}));
 		dayNumber++;
 	};
-
 	// this is the new "clicker" function, although it doesn't have a name anymore, it just is.
 	mainView.addEventListener('click',function(e){
 		if (e.source.current == 'yes'){
@@ -123,6 +118,8 @@ var calView = function(a,b,c){
 			oldDay=e.source;
 		}
 	});
+	var shadow = Ti.UI.createView({height:18,left:-1,width:322,backgroundImage:'pngs/monthshadow.png'});
+	mainView.add(shadow);
 
 return mainView;
 };
@@ -132,41 +129,64 @@ var setDate = new Date();
 a = setDate.getFullYear();
 b = setDate.getMonth();
 c = setDate.getDate();
-// wrap the calendar view function into a variable so it can be removed when changing months
-var calendarView = calView(a,b,c);
+// add the three calendar views to the window for changing calendars with animation later
+var thisCalendarView = calView(a,b,c);
+thisCalendarView.left=-1;
+var nextCalendarView = calView(a,b+1,c);
+nextCalendarView.left=323;
+var prevCalendarView = calView(a,b-1,c,-323);
+prevCalendarView.left=-323;
 
-// create shadow
-var shadow = Ti.UI.createView({height:18,backgroundImage:'pngs/monthshadow.png'});
 
 // add everything to the window 
 win.add(toolBar);
-win.add(calendarView);
-win.add(shadow);
+win.add(thisCalendarView);
+win.add(nextCalendarView);
+win.add(prevCalendarView);
 
 // yeah, open the window, why not?
 win.open({modal:true});
 
-
+var slideNext =  Titanium.UI.createAnimation({left:-322,duration:500});
+var slideReset =  Titanium.UI.createAnimation({left:-1,duration:500});
+var slidePrev =  Titanium.UI.createAnimation({left:322,duration:500});
 
 //-------------------switching months-------------------
 // next month button
 nextMonth.addEventListener('click',function(){
-	win.remove(calendarView);
-	win.remove(shadow);
-	b++;
 	if(b > 11){ b = b-12; a++;}
-	calendarView = calView(a,b,c);
-	win.add(calendarView);
-	win.add(shadow);
+	b++;
+	thisCalendarView.animate(slideNext);
+
+	nextCalendarView.animate(slideReset);
+	setTimeout(function(){
+		thisCalendarView.left=-322;
+		nextCalendarView.left=-1;
+		prevCalendarView = thisCalendarView;
+		thisCalendarView = nextCalendarView;
+		nextCalendarView = calView(a,b,c);
+		nextCalendarView.left=322;
+		win.add(nextCalendarView);
+	},500);
 });
+
 //prevoius month button
 prevMonth.addEventListener('click',function(){
-	win.remove(calendarView);
-	win.remove(shadow);
-	b--;
 	if(b < 0){ b = b+12;a--;}
-	calendarView = calView(a,b,c);
-	win.add(calendarView);
-	win.add(shadow);
+	b--;
+	thisCalendarView.animate(slidePrev);
+
+	prevCalendarView.animate(slideReset);
+
+	setTimeout(function(){
+		thisCalendarView.left=322;
+		prevCalendarView.left=-1;
+		nextCalendarView = thisCalendarView;
+		thisCalendarView = prevCalendarView;
+		prevCalendarView = calView(a,b,c);
+		prevCalendarView.left=-322;
+	
+		win.add(prevCalendarView);
+	},500);
 });
 
