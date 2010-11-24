@@ -37,8 +37,8 @@ toolBar.add(toolBarDays);
 var calView = function(a,b,c){
 	var month = b;
 	var year = a;
-	if(b > 11){ month = b-12;year = a+1}
-	if(b < 0){ month = b+12;year = a-1}
+	if(b > 11){ month = b-12;year = a+1;}
+	if(b < 0){ month = b+12;year = a-1;}
 	
 	if(month==0){monthTitle.text='January';}
 	if(month==1){monthTitle.text='February';}
