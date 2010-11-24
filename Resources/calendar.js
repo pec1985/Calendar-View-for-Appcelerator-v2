@@ -45,7 +45,6 @@ dayView = function(e){
 
 // -------------------main calendar function, this is EVERYTHING!! ha ha-------------------
 var calView = function(a,b,c){
-<<<<<<< HEAD
 	switch(b){
 		case 0: monthTitle.text='January '+a; break;
 		case 1: monthTitle.text='February '+a; break;
@@ -60,25 +59,6 @@ var calView = function(a,b,c){
 		case 10: monthTitle.text='November '+a; break;
 		case 11: monthTitle.text='December '+a; break;
 	};
-=======
-	var month = b;
-	var year = a;
-	if(b > 11){ month = b-12;year = a+1;}
-	if(b < 0){ month = b+12;year = a-1;}
-	
-	if(month==0){monthTitle.text='January';}
-	if(month==1){monthTitle.text='February';}
-	if(month==2){monthTitle.text='March';}
-	if(month==3){monthTitle.text='April';}
-	if(month==4){monthTitle.text='May';}
-	if(month==5){monthTitle.text='June';}
-	if(month==6){monthTitle.text='July';}
-	if(month==7){monthTitle.text='Augost';}
-	if(month==8){monthTitle.text='September';}
-	if(month==9){monthTitle.text='October';}
-	if(month==10){monthTitle.text='November';}
-	if(month==11){monthTitle.text='December';}
->>>>>>> origin/master
 	//create main calendar view
 	var mainView = Ti.UI.createView({layout:'horizontal',backgroundColor:'#DCDCDF',width:322,height:'auto',left:-1,top:0});
 	//set the time
