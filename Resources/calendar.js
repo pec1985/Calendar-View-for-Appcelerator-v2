@@ -142,7 +142,7 @@ var thisCalendarView = calView(a,b,c);
 thisCalendarView.left=-1;
 var nextCalendarView = calView(a,b+1,c);
 nextCalendarView.left=323;
-var prevCalendarView = calView(a,b-1,c,-323);
+var prevCalendarView = calView(a,b-1,c);
 prevCalendarView.left=-323;
 
 backButton.title=monthName(b)+' '+c+', '+a;
