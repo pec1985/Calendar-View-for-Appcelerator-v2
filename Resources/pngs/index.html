@@ -1,4 +1,5 @@
 <html>
+<meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no" />
 <style>
 body{
 	margin:0;
@@ -42,7 +43,7 @@ body{
 	color:white;
 }
 .calendar{
-	top:40px;
+	top:60px;
 	width:322px;
 	position:absolute;
 }
@@ -58,7 +59,7 @@ body{
 #titleBar{
 	background-image:url(monthgradient.png);
 	width:100%;
-	height:40px
+	height:60px;
 }
 #next{
 	position:absolute;
@@ -81,6 +82,12 @@ body{
 	height:40px;
 	width:100%;
 	line-height:40px;
+}
+.daysOfTheWeek{
+	width:46px;
+	height:20px;
+	float:left;
+	text-align:center
 }
 </style>
 <script>
@@ -248,16 +255,23 @@ start = function(){
 <body onload="start()">
 		<div id="iphone">
 			<div id="titleBar">
-				<div id="title">
-					fdg
-				</div>
+				<div id="title"></div>
 				<div id='next'>
 					<img src="next.png" width="20px" style="margin-top:7px;margin-right:10px" / >
 				</div>
 				<div id='prev'>
 					<img src="prev.png" width="20px" style="margin-top:7px;margin-left:10px" / >
 				</div>
-			</div>
+				<div style="position:relative;top:40;width:322;left:-1">
+					<div class="daysOfTheWeek">sun</div>
+					<div class="daysOfTheWeek">mon</div>
+					<div class="daysOfTheWeek">tues</div>
+					<div class="daysOfTheWeek">wed</div>
+					<div class="daysOfTheWeek">thu</div>
+					<div class="daysOfTheWeek">fri</div>
+					<div class="daysOfTheWeek">sat</div>
+				</div>
+		</div>
 		</div>
 </body>
 </html>
