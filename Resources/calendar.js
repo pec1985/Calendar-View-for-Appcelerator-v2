@@ -142,7 +142,7 @@ var thisCalendarView = calView(a,b,c);
 thisCalendarView.left=-1;
 var nextCalendarView = calView(a,b+1,c);
 nextCalendarView.left=323;
-var prevCalendarView = calView(a,b-1,c);
+var prevCalendarView = calView(a,b-1,c,-323);
 prevCalendarView.left=-323;
 
 backButton.title=monthName(b)+' '+c+', '+a;
@@ -167,6 +167,7 @@ nextMonth.addEventListener('click',function(){
 	if(b > 11){ b = b-12; a++;}
 	b++;
 	thisCalendarView.animate(slideNext);
+
 	nextCalendarView.animate(slideReset);
 	setTimeout(function(){
 		thisCalendarView.left=-322;
@@ -184,14 +185,17 @@ prevMonth.addEventListener('click',function(){
 	if(b < 0){ b = b+12;a--;}
 	b--;
 	thisCalendarView.animate(slidePrev);
+
 	prevCalendarView.animate(slideReset);
+
 	setTimeout(function(){
 		thisCalendarView.left=322;
 		prevCalendarView.left=-1;
 		nextCalendarView = thisCalendarView;
 		thisCalendarView = prevCalendarView;
 		prevCalendarView = calView(a,b,c);
-		prevCalendarView.left=-322;	
+		prevCalendarView.left=-322;
+	
 		win.add(prevCalendarView);
 	},500);
 });

@@ -1,0 +1,263 @@
+<html>
+<style>
+body{
+	margin:0;
+	background-image:url(Default-calinvite.png);
+}
+.normal{
+	width:46px;
+	height:44px;
+	float:left;
+	text-align:center;
+	background-image:url(monthdaytile-Decoded.png);
+	line-height:44px;
+	background-color:#DCDCDF;
+}
+.thisMonth{
+	color:#3a4756;
+}
+/*
+.thisMonth:hover{
+	background-image:url(monthdaytile_selected.png);
+	color:white;
+	background-position: 0px 0px;
+}
+*/
+.otherMonth{
+	color:#8e959f;
+}
+.today{
+	background-image:url(monthdaytiletoday.png);
+	-webkit-background-size: 100%;
+	color:white;
+}
+.todaySelected{
+	background-image:url(monthdaytiletoday_selected.png);
+	-webkit-background-size: 100%;
+	color:white;
+}
+.selected{
+	background-image:url(monthdaytile_selected.png);
+	-webkit-background-size: 100%;
+	color:white;
+}
+.calendar{
+	top:40px;
+	width:322px;
+	position:absolute;
+}
+.current{
+	left:-1px;
+}
+.next{
+	left:322px;
+}
+.prev{
+	left:-319px;
+}
+#titleBar{
+	background-image:url(monthgradient.png);
+	width:100%;
+	height:40px
+}
+#next{
+	position:absolute;
+	top:0px;
+	right:0px;
+	height:40px;
+	text-align:right
+}
+#prev{
+	position:absolute;
+	top:0px;
+	left:0px;
+	height:40px;
+	text-align:left
+}
+#title{
+	position:absolute;
+	top:0px;
+	text-align:center;
+	height:40px;
+	width:100%;
+	line-height:40px;
+}
+</style>
+<script>
+start = function(){
+ document.ontouchmove = function(e){ e.preventDefault();}
+	//set today's calendar days 
+	var setDate = new Date();
+	a = setDate.getFullYear();
+	b = setDate.getMonth();
+	c = setDate.getDate();
+	var todayMonth = b;
+	var todayYear = a;
+	
+	//create indivudual days
+	calDay = function(e){
+		calendarDay = document.createElement('div');
+		calendarDay.setAttribute('class','normal '+e.month);
+		calendarDay.month = e.month;
+		calendarDay.innerHTML = e.day;
+		return calendarDay;
+	}
+	//month name
+	monthName = function(e){
+		switch(e){
+			case 0: e='January'; break;
+			case 1: e='February'; break;
+			case 2: e='March'; break;
+			case 3: e='April'; break;
+			case 4: e='May'; break;
+			case 5: e='June'; break;
+			case 6: e='July'; break;
+			case 7: e='Augost'; break;
+			case 8: e='September'; break;
+			case 9: e='October'; break;
+			case 10: e='November'; break;
+			case 11: e='December'; break;
+		};
+		return e;
+	};
+	
+	var iphone = document.getElementById('iphone');
+	var next = document.getElementById('next');
+	var prev = document.getElementById('prev');
+	var title = document.getElementById('title');
+	
+	//create the calendar main view/div
+	calView = function(e){
+		title.innerHTML = monthName(b)+' '+a;
+		var daysInMonth = 32 - new Date(e.a,e.b,32).getDate();
+		var dayOfMonth = new Date(e.a,e.b,e.c).getDate();
+		var dayOfWeek = new Date(e.a,e.b,1).getDay(); 
+		var daysInLastMonth = 32 - new Date(e.a,e.b-1,32).getDate();
+		var daysInNextMonth = (new Date(e.a,e.b,daysInMonth).getDay())-6;
+		
+		calendarDiv = document.createElement('div');
+		calendarDiv.setAttribute('id','cal');
+		calendarDiv.setAttribute('class','calendar '+e.which);
+		
+		var dayNumber = daysInLastMonth-dayOfWeek+1;
+		//get last month's days
+		for(i=0;i<dayOfWeek;i++){
+			calendarDiv.appendChild(new calDay({day:dayNumber,month:'otherMonth',dayOfMonth:''}));
+			dayNumber++;
+		};
+		// reset day number for current month
+		dayNumber = 1;
+		//get this month's days
+		for(i=0;i<daysInMonth;i++){
+			var newDay=new calDay({day:dayNumber,month:'thisMonth',dayOfMonth:dayOfMonth});
+			calendarDiv.appendChild(newDay);
+			if(newDay.innerHTML == dayOfMonth && e.a == todayYear && e.b == todayMonth){
+				calendarDay.setAttribute('class','normal today todaySelected');		
+				var oldDay = newDay;
+			}
+			dayNumber++;
+		};
+		dayNumber = 1;
+		//get remaining month's days
+		for(i=0;i>daysInNextMonth;i--){
+			calendarDiv.appendChild(new calDay({day:dayNumber,month:'otherMonth',dayOfMonth:''}));
+			dayNumber++;
+		};
+		if(!oldDay){var oldDay = document.createElement('div');}		
+		calendarDiv.addEventListener('click',function(e){
+			if(e.target.month == 'thisMonth'){
+				if(oldDay.innerHTML == dayOfMonth){
+					oldDay.setAttribute('class','normal today');		
+				} else {
+					oldDay.setAttribute('class','normal thisMonth');		
+				}
+				if(e.target.innerHTML == dayOfMonth){
+					e.target.setAttribute('class','normal today todaySelected');	
+				} else {
+					e.target.setAttribute('class','normal thisMonth selected');
+				}
+				Ti.App.fireEvent('show_date',{date: monthName(b)+' '+e.target.innerHTML+' '+a});
+				
+				oldDay = e.target;
+			}
+		});
+		var shadow = document.createElement('div');
+		shadow.style.width='322px';
+		shadow.style.height='18px';
+		shadow.style.float='left';
+		shadow.style.backgroundImage='url(monthshadow.png)';
+		calendarDiv.appendChild(shadow);
+		return calendarDiv;
+	};
+	
+	var cal = new calView({which:'current',a:a,b:b,c:c});
+	iphone.appendChild(cal);
+	
+	next.addEventListener('click',function(){	
+		b++;
+		if(b > 11){ b = b-12; a++;}
+		var cal1 = new calView({which:'next',a:a,b:b,c:c});
+		iphone.appendChild(cal1);
+		var moveLeft = '';
+		moveLeft=moveLeft+'width:322px;';
+        moveLeft=moveLeft+'-webkit-transform: translate(-322px, 0px);';
+        moveLeft=moveLeft+'-webkit-transition-duration: .35s, .35s;';
+        moveLeft=moveLeft+'-webkit-transition-property: -webkit-transform, opacity;';
+        moveLeft=moveLeft+'-webkit-transition-timing-function: ease-in-out, linear;';
+        moveLeft=moveLeft+'opacity: 1;';
+        moveLeft=moveLeft+'visibility: visible';
+		setTimeout(function(){
+			cal1.style.cssText= moveLeft;
+			cal.style.cssText= moveLeft;
+		},1);
+		setTimeout(function(){
+			iphone.removeChild(cal);
+			cal = new calView({which:'current',a:a,b:b,c:c});
+			iphone.removeChild(cal1);
+			iphone.appendChild(cal);
+			
+		},350);
+	});
+	prev.addEventListener('click',function(){	
+		b--;
+		if(b < 0){ b = b+12;a--;}
+		var cal1 = new calView({which:'prev',a:a,b:b,c:c});
+		iphone.appendChild(cal1);
+		var moveRight = '';
+		moveRight=moveRight+'width:322px;';
+        moveRight=moveRight+'-webkit-transform: translate(322px, 0px);';
+        moveRight=moveRight+'-webkit-transition-duration: .35s, .35s;';
+        moveRight=moveRight+'-webkit-transition-property: -webkit-transform, opacity;';
+        moveRight=moveRight+'-webkit-transition-timing-function: ease-in-out, linear;';
+        moveRight=moveRight+'opacity: 1;';
+        moveRight=moveRight+'visibility: visible';
+		setTimeout(function(){
+			cal1.style.cssText= moveRight;
+			cal.style.cssText= moveRight;
+		},1);
+		setTimeout(function(){
+			iphone.removeChild(cal);
+			cal = new calView({which:'current',a:a,b:b,c:c});
+			iphone.removeChild(cal1);
+			iphone.appendChild(cal);
+			
+		},350);
+	});
+};
+</script>
+<body onload="start()">
+		<div id="iphone">
+			<div id="titleBar">
+				<div id="title">
+					fdg
+				</div>
+				<div id='next'>
+					<img src="next.png" width="20px" style="margin-top:7px;margin-right:10px" / >
+				</div>
+				<div id='prev'>
+					<img src="prev.png" width="20px" style="margin-top:7px;margin-left:10px" / >
+				</div>
+			</div>
+		</div>
+</body>
+</html>
