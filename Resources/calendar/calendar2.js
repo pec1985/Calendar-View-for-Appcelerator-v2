@@ -1,6 +1,6 @@
 var selectDate = function(element){
 	var thisWindow = Ti.UI.currentWindow;
-	var mainView = Ti.UI.createWebView({url:'pngs/index.html',height:324,bottom:-324});
+	var mainView = Ti.UI.createWebView({url:'index.html',height:324,bottom:-324});
 	win.add(mainView);
 	var slideUp =  Titanium.UI.createAnimation({bottom:0,duration:250});
 	var slideDown =  Titanium.UI.createAnimation({bottom:-324,duration:250});
