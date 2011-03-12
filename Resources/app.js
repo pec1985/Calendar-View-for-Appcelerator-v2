@@ -1,6 +1,6 @@
 /*
 
-calendarView for Appcelerator Version 3!!!
+calendarView for Appcelerator Version 3.5!!!
 
 feel free to modify it and improve it.
 find me on twitter @pecdev
@@ -19,15 +19,11 @@ hope you like it and find it usefull
 */
 
 
-
-//this is the old one, it uses only native elements
-//Ti.include('calendar.js');
-
 //this is the new one it uses a webview, HTML, CSS, and JavaScript
-Ti.include('calendar2.js');
+Ti.include('calendar/calendar.js');
 
-var win = Ti.UI.createWindow();
-var label = Ti.UI.createLabel({text:'Click Here To Show And Hide',textAlign:'center',top:20,left:50,right:50,height:40,backgroundColor:'white',borderRadius:15});
+var win = Ti.UI.createWindow({backgroundColor:'59b3df'});
+var label = Ti.UI.createLabel({text:'Click Here To Show',textAlign:'center',top:20,left:50,right:50,height:40,backgroundColor:'white',borderRadius:15});
 win.add(label);
 win.open();
 
