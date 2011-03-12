@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<ti:app xmlns:ti="http://ti.appcelerator.org">
+    <deployment-targets>
+        <target device="iphone">true</target>
+    </deployment-targets>
+<id>com.pec1985.calendarView</id>
+<name>calendar</name>
+<version>1.0</version>
+<publisher>Pedro Enirique</publisher>
+<url>http://pec1985.com/</url>
+<description>No description provided</description>
+<copyright>2010 by Pedro</copyright>
+<icon>default_app_logo.png</icon>
+    <persistent-wifi>false</persistent-wifi>
+    <prerendered-icon>false</prerendered-icon>
+    <statusbar-style>default</statusbar-style>
+    <statusbar-hidden>false</statusbar-hidden>
+    <fullscreen>false</fullscreen>
+    <navbar-hidden>false</navbar-hidden>
+    <analytics>true</analytics>
+<guid>86f39653-c117-464a-8e04-4643b523d354</guid>
+</ti:app>
